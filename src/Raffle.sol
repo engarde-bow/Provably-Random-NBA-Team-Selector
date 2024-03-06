@@ -9,7 +9,7 @@ contract Raffle is VRFConsumerBaseV2 {
     //Errors//
     error somethingwentwrong();
 
-    uint256[] pastWinners;
+    string[] pastWinners;
 
     //NBA Teams//
     string hawks = "Atlanta Hawks";
@@ -25,6 +25,7 @@ contract Raffle is VRFConsumerBaseV2 {
 
     //State Variables//
 
+    string s_LATEST_SELECTED_TEAM;
     uint256 public s_RANDOM_NUMBER;
     uint256 public s_LATEST_REQUEST_ID;
 
@@ -55,7 +56,6 @@ contract Raffle is VRFConsumerBaseV2 {
         );
 
         s_LATEST_REQUEST_ID = requestId;
-        pastWinners.push(s_LATEST_REQUEST_ID);
     }
 
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
@@ -73,42 +73,42 @@ contract Raffle is VRFConsumerBaseV2 {
         return s_LATEST_REQUEST_ID;
     }
 
-    function getRandomNBATeam() public view returns (string memory) {
-        if (s_RANDOM_NUMBER == 0) {
-            return hawks;
-        }
-        if (s_RANDOM_NUMBER == 1) {
-            return celtics;
-        }
-        if (s_RANDOM_NUMBER == 2) {
-            return nets;
-        }
-        if (s_RANDOM_NUMBER == 3) {
-            return hornets;
-        }
-        if (s_RANDOM_NUMBER == 4) {
-            return bulls;
-        }
-        if (s_RANDOM_NUMBER == 5) {
-            return cavs;
-        }
-        if (s_RANDOM_NUMBER == 6) {
-            return celtics;
-        }
-        if (s_RANDOM_NUMBER == 7) {
-            return mavs;
-        }
-        if (s_RANDOM_NUMBER == 8) {
-            return nugs;
-        }
-        if (s_RANDOM_NUMBER == 9) {
-            return lakeshow;
-        }
+    function AssignRandomNBATeam() public returns (string memory) {
+        string memory RandomTeam;
 
-        revert somethingwentwrong();
+        if (s_RANDOM_NUMBER == 0) {
+            RandomTeam = hawks;
+        } else if (s_RANDOM_NUMBER == 1) {
+            RandomTeam = celtics;
+        } else if (s_RANDOM_NUMBER == 2) {
+            RandomTeam = nets;
+        } else if (s_RANDOM_NUMBER == 3) {
+            RandomTeam = hornets;
+        } else if (s_RANDOM_NUMBER == 4) {
+            RandomTeam = bulls;
+        } else if (s_RANDOM_NUMBER == 5) {
+            RandomTeam = cavs;
+        } else if (s_RANDOM_NUMBER == 6) {
+            RandomTeam = celtics;
+        } else if (s_RANDOM_NUMBER == 7) {
+            RandomTeam = mavs;
+        } else if (s_RANDOM_NUMBER == 8) {
+            RandomTeam = nugs;
+        } else if (s_RANDOM_NUMBER == 9) {
+            RandomTeam = lakeshow;
+        } else {
+            revert somethingwentwrong();
+        }
+        pastWinners.push(RandomTeam);
+        s_LATEST_SELECTED_TEAM = RandomTeam;
+        return RandomTeam;
     }
 
-    function getPastWinners() public view returns (uint256[] memory) {
+    function getPastWinners() public view returns (string[] memory) {
         return pastWinners;
+    }
+
+    function getSelectedRandomNBATeam() public view returns (string memory) {
+        return s_LATEST_SELECTED_TEAM;
     }
 }
